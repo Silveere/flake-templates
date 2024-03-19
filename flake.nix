@@ -8,6 +8,14 @@
         path = ./github-actions;
         description = "A basic devShell flake with GitHub Actions support";
       };
+      rust = {
+        path = ./rust;
+        description = "A basic devShell flake with Rust installed via oxalica/rust-overlay";
+      };
+      empty = {
+        path = ./empty;
+        description = "An empty devShell template with Hello World";
+      };
     };
   };
 }
