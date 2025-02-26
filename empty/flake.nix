@@ -1,22 +1,39 @@
 {
   description = "empty devShell template with Hello World";
 
-  inputs.systems.url = "github:nix-systems/default";
+  inputs = {
+    systems.url = "github:nix-systems/default";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
 
-  outputs = { self, nixpkgs, systems }: let
-    inherit (nixpkgs) lib;
-    eachSystem = lib.genAttrs (import systems);
+  outputs = {
+    self,
+    nixpkgs,
+    flake-parts,
+    ...
+  } @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} ({
+      inputs,
+      self,
+      lib,
+      ...
+    }: {
+      systems = import inputs.systems;
 
-  in {
-    devShells = eachSystem (system: let
-      pkgs = import nixpkgs { inherit system; };
+      imports = [
+      ];
 
-    in {
-      default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          hello
-        ];
+      perSystem = {
+        inputs',
+        self',
+        pkgs,
+        ...
+      }: {
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            hello
+          ];
+        };
       };
     });
-  };
 }
