@@ -18,22 +18,10 @@
       lib,
       ...
     }: {
-      systems = import inputs.systems;
-
       imports = [
+        ./nix/devshell.nix
       ];
 
-      perSystem = {
-        inputs',
-        self',
-        pkgs,
-        ...
-      }: {
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            hello
-          ];
-        };
-      };
+      systems = import inputs.systems;
     });
 }

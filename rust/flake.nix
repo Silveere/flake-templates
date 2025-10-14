@@ -19,28 +19,17 @@
       lib,
       ...
     }: {
-      systems = import inputs.systems;
-
       imports = [
+        ./nix/devshell.nix
       ];
 
-      perSystem = {
-        system,
-        inputs',
-        self',
-        pkgs,
-        ...
-      }: {
+      systems = import inputs.systems;
+
+      perSystem = {system, ...}: {
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
           overlays = [
             (import inputs.rust-overlay)
-          ];
-        };
-
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            rust-bin.stable.latest.default
           ];
         };
       };
