@@ -13,6 +13,6 @@
         (inputs.import-tree ./nix)
       ];
 
-      inherit (inputs) systems;
+      systems = import inputs.systems;
     });
 }
