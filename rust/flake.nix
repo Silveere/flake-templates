@@ -3,35 +3,17 @@
 
   inputs = {
     systems.url = "github:nix-systems/default";
-    rust-overlay.url = "github:oxalica/rust-overlay";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-parts,
-    ...
-  } @ inputs:
-    flake-parts.lib.mkFlake {inherit inputs;} ({
-      inputs,
-      self,
-      lib,
-      ...
-    }: {
+  outputs = {nixpkgs, ...} @ inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} ({inputs, ...}: {
       imports = [
-        ./nix/devshell.nix
+        (inputs.import-tree ./nix)
       ];
 
       systems = import inputs.systems;
-
-      perSystem = {system, ...}: {
-        _module.args.pkgs = import inputs.nixpkgs {
-          inherit system;
-          overlays = [
-            (import inputs.rust-overlay)
-          ];
-        };
-      };
     });
 }
